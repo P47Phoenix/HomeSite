@@ -29,3 +29,5 @@ open a PR, let CI gate it. Content bakes into the prerendered HTML at build time
 
 See `docs/README.md` for documentation conventions and the `behavior-change`
 PR label rule.
+
+<!-- S3 scaffold CI verification PR marker -->
