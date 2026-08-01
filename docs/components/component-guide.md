@@ -160,7 +160,7 @@ adjacent service name and must not be read twice. Hierarchy carries no color sem
 
 ---
 
-## ServiceCard
+### ServiceCard (heading demoted for breach test)
 
 **Purpose:** One service entry; the whole card is a single `<a>` — one large tap target
 per service. Composes MonogramBadge + name + always-visible arrow glyph (↗) + description
