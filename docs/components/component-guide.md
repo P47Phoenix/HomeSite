@@ -16,7 +16,6 @@ Zero-inventory branch: explains that `src/content/services.json` is empty and ho
 
 Decorative 1–2 character badge, `aria-hidden="true"` — the card name carries the accessible meaning.
 
-## ServiceCard
 
 One inventory entry: monogram + name + description; the whole card is a plain anchor to the service.
 
