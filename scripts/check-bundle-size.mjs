@@ -1,4 +1,4 @@
-// M10/NFR-5 bundle-budget gate: fail when gzipped initial JS in dist/assets
+// M10/NFR-5 bundle-budget gate: fail when gzipped JS anywhere under dist/
 // exceeds the budget. Budget lives in package.json "config" — versioned with code (M4 pattern).
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
