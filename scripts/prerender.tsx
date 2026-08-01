@@ -23,16 +23,16 @@ const cssHref = `/assets/${cssFiles[0]}`;
 
 const markup = renderToStaticMarkup(<App services={services} />);
 const html =
-  '<!doctype html>' +
-  '<html lang="en">' +
-  '<head>' +
-  '<meta charset="utf-8">' +
-  '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
-  '<title>Home</title>' +
-  `<link rel="stylesheet" href="${cssHref}">` +
-  '</head>' +
-  `<body>${markup}</body>` +
-  '</html>';
+  '<!doctype html>\n' +
+  '<html lang="en">\n' +
+  '<head>\n' +
+  '<meta charset="utf-8">\n' +
+  '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+  '<title>Connelly Lab</title>\n' +
+  `<link rel="stylesheet" href="${cssHref}">\n` +
+  '</head>\n' +
+  `<body>${markup}</body>\n` +
+  '</html>\n';
 
 writeFileSync(join(distDir, 'index.html'), html);
 

@@ -1,8 +1,13 @@
-/** Page footer. Content is scaffold-level; S4 implements the approved mock. */
-export function SiteFooter() {
+export interface SiteFooterProps {
+  /** Footer line; interpunct-separated segments recommended. */
+  text: string;
+}
+
+/** Identity + scope statement. Muted small text, no links — nothing to link to. */
+export function SiteFooter({ text }: SiteFooterProps) {
   return (
-    <footer className="site-footer">
-      <p>Home-lab landing page — served from the cluster, built from git.</p>
+    <footer>
+      <div className="wrap">{text}</div>
     </footer>
   );
 }

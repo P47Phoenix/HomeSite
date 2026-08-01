@@ -2,7 +2,7 @@
 // components) from services.json fixtures and asserts cross-component behavior —
 // grouping order, card count, empty-state branch, heading hierarchy, href fidelity.
 // This is NOT a renamed unit test: every assertion spans 2+ components via App.
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { App } from '../../src/App';
@@ -10,6 +10,11 @@ import type { Service } from '../../src/types';
 import defaultFixture from '../fixtures/default.json';
 import emptyFixture from '../fixtures/empty.json';
 import maxContentFixture from '../fixtures/max-content.json';
+
+/** Card names inside a list, excluding the decorative arrow glyph. */
+function cardNamesIn(list: HTMLElement): (string | undefined)[] {
+  return [...list.querySelectorAll('.card-name')].map((el) => el.firstChild?.textContent?.trim());
+}
 
 describe('composed page — default fixture (2 categories, 4 services)', () => {
   it('renders one card per fixture entry with exact href fidelity (CF-D3)', () => {
@@ -30,26 +35,18 @@ describe('composed page — default fixture (2 categories, 4 services)', () => {
     expect(categoryHeadings.map((h) => h.textContent)).toEqual(['Infrastructure', 'Media']);
   });
 
-  it('places each service inside its own category list', () => {
-    const { container } = render(<App services={defaultFixture as Service[]} />);
-    const sections = container.querySelectorAll('.service-category');
-    expect(sections).toHaveLength(2);
-    const infra = within(sections[0] as HTMLElement);
-    expect(infra.getByRole('heading', { level: 3, name: 'Infrastructure' })).toBeInTheDocument();
-    expect(infra.getAllByRole('listitem').map((li) => li.querySelector('.service-card-name')?.textContent)).toEqual([
-      'Files',
-      'Router',
-    ]);
-    const media = within(sections[1] as HTMLElement);
-    expect(media.getAllByRole('listitem').map((li) => li.querySelector('.service-card-name')?.textContent)).toEqual([
-      'Movies',
-      'Music',
-    ]);
+  it('places each service inside its own category list, sorted by name', () => {
+    render(<App services={defaultFixture as Service[]} />);
+    const lists = screen.getAllByRole('list');
+    expect(lists).toHaveLength(2);
+    expect(cardNamesIn(lists[0] as HTMLElement)).toEqual(['Files', 'Router']);
+    expect(cardNamesIn(lists[1] as HTMLElement)).toEqual(['Movies', 'Music']);
   });
 
-  it('assembles the heading hierarchy: one h1, the services h2, category h3s', () => {
+  it('assembles the heading hierarchy: the "Connelly Lab" h1, the services h2, category h3s', () => {
     render(<App services={defaultFixture as Service[]} />);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole('heading', { level: 1, name: 'Connelly Lab' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Services' })).toBeInTheDocument();
     expect(screen.getByRole('banner')).toBeInTheDocument();
     expect(screen.getByRole('main')).toBeInTheDocument();
@@ -60,7 +57,7 @@ describe('composed page — default fixture (2 categories, 4 services)', () => {
 describe('composed page — empty fixture', () => {
   it('selects the EmptyState branch and renders no service lists', () => {
     render(<App services={emptyFixture as Service[]} />);
-    expect(screen.getByText('No services configured yet.')).toBeInTheDocument();
+    expect(screen.getByText('No services listed yet.')).toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
   });

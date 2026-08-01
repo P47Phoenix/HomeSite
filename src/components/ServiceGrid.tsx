@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
+
 import type { Service } from '../types';
-import { groupServices, hasAnyCategory, compareServices } from '../lib/grouping';
+import { compareServices, groupServices, hasAnyCategory } from '../lib/grouping';
 import { CategoryHeading } from './CategoryHeading';
 import { EmptyState } from './EmptyState';
 import { ServiceCard } from './ServiceCard';
@@ -11,7 +13,11 @@ export interface ServiceGridProps {
   groupByCategory?: boolean;
 }
 
-/** Service inventory grid: flat list, or category-grouped sections when categories are present. */
+/**
+ * Service inventory grid as a semantic list (a11y fix F3): one `ul.grid` of cards,
+ * or — when grouped — one `ul.grid` per category band with a CategoryHeading above
+ * each, rendered as siblings so the mock's h3 spacing rules apply unchanged.
+ */
 export function ServiceGrid({ services, groupByCategory }: ServiceGridProps) {
   if (services.length === 0) {
     return <EmptyState />;
@@ -20,7 +26,7 @@ export function ServiceGrid({ services, groupByCategory }: ServiceGridProps) {
   const grouped = groupByCategory ?? hasAnyCategory(services);
   if (!grouped) {
     return (
-      <ul className="service-grid">
+      <ul className="grid">
         {[...services].sort(compareServices).map((service) => (
           <ServiceCard key={service.href} service={service} />
         ))}
@@ -29,17 +35,17 @@ export function ServiceGrid({ services, groupByCategory }: ServiceGridProps) {
   }
 
   return (
-    <div className="service-grid-grouped">
+    <>
       {groupServices(services).map((group) => (
-        <section key={group.category} className="service-category">
-          <CategoryHeading name={group.category} />
-          <ul className="service-grid">
+        <Fragment key={group.category}>
+          <CategoryHeading title={group.category} />
+          <ul className="grid">
             {group.services.map((service) => (
               <ServiceCard key={service.href} service={service} />
             ))}
           </ul>
-        </section>
+        </Fragment>
       ))}
-    </div>
+    </>
   );
 }
