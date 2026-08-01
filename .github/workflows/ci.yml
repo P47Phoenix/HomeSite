@@ -73,6 +73,8 @@ jobs:
         run: npm run check:docs-coverage
       - name: Docs-presence check (M8a)
         run: npm run check:docs-presence
+      - name: Contrast gate (AC-1/AC-2)
+        run: npm run check:contrast
 
   e2e:
     needs: build-gates

@@ -36,16 +36,17 @@ check presence).
 | `EmptyState` | Molecule | Yes — only when zero services | W3 |
 | `SiteFooter` | Organism | No | W1 (5), W2, W3 |
 
-Shared data type used across props (`src/types.ts`):
+
+### Shared Data Type
 
 ```ts
-/** One entry in the operator-provided service inventory (content, not code). */
+/** One entry in the operator-provided service inventory (content, not code — NFR-5). */
 interface Service {
   /** Display name, e.g. "TrueNAS". */
   name: string;
   /** Absolute URL of the service on the LAN. Plain anchor target — same-tab. */
   href: string;
-  /** One-line plain-text description. Required: the static dead-link mitigation (E3). */
+  /** One-line plain-text description. Required: the E3 dead-link mitigation. */
   description: string;
   /** 1–2 uppercase characters for the monogram badge, e.g. "TN". */
   monogram: string;
@@ -54,25 +55,44 @@ interface Service {
 }
 ```
 
-### Design tokens
+### Design Tokens
 
-Tokens live in `src/styles/tokens.css`, taken **verbatim from the approved mocks**
-(`docs/design/mocks/index.html`) — verbatim tokens make "implementation matches mocks"
-checkable (FR-04). Dark values switch via `@media (prefers-color-scheme: dark)` only —
-no toggle UI, no JS. `color-scheme: light dark` is declared.
+Implemented in `src/styles/tokens.css` as exactly nine color custom properties on `:root`
+(light values), switched by `@media (prefers-color-scheme: dark)` — no toggle UI, no JS.
+`color-scheme: light dark` is declared. Spacing, typography, and radii are literal values
+copied from the mock CSS, not custom properties.
 
-Contrast rules: `--fg`/`--bg` and `--accent-fg`/`--accent` meet WCAG 2.1 AA (≥ 4.5:1) in
-both themes; `--muted` is used only for secondary text and must stay ≥ 4.5:1 against its
-surface. **The light-scheme `--accent` (4.24:1 against `--bg`) is never used for small
-text** (< 24px on `--bg`/`--card-bg`) — CF-D1 fix F2's recorded prohibition. Re-verify
-contrast on any token change.
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--bg` | `#f6f7f9` | `#14161a` | Page background |
+| `--fg` | `#1b1e24` | `#e8eaee` | Primary text |
+| `--muted` | `#5b6472` | `#9aa3b0` | Secondary text: tagline, descriptions, arrow glyph, footer, category headings |
+| `--card-bg` | `#ffffff` | `#1d2026` | ServiceCard surface |
+| `--card-border` | `#d9dde3` | `#2e333c` | Card border, footer top rule, EmptyState dashed border |
+| `--card-border-hover` | `#9aa4b2` | `#4a5260` | Card border on hover |
+| `--accent` | `#2f6fed` | `#5b8def` | MonogramBadge background, focus ring |
+| `--accent-fg` | `#ffffff` | `#10131a` | Text on accent (badge letters) |
+| `--panel` | `#eceef2` | `#1a1d23` | EmptyState quiet panel |
+
+Binding token rules and recorded deltas:
+
+- **F2 prohibition:** light `--accent` (`#2f6fed`) must never be used as text color below
+  24px (18.66px bold) on `--bg` or `--card-bg` — 4.24:1, fails AA; enforced by
+  `scripts/check-contrast.mjs` (AC-2 audit). Accent is background (badge) and focus ring only.
+- **CF-D2 resolution:** mobile side padding is 16px per the component spec — a deliberate,
+  documented delta vs the approved mock's 24px; recorded 2026-07-31.
+- **CategoryHeading visual:** implemented per the approved max-content mock — 0.8rem
+  uppercase muted — which supersedes the spec table's 1rem/`--fg` value; the mock is the
+  approved visual truth.
+- Motion: none. Zero `transition`/`animation` rules (AC-13); the only movement is
+  `.card:active { transform: translateY(1px); }`.
 
 ---
 
 ## CategoryHeading
 
-**Purpose:** Group separator for the category-grouped state (e.g. "Media", "Monitoring").
-Renders only when categories exist — conditional component (W4).
+**Purpose:** Group separator for the grouped (max-content) state: "Media", "Monitoring",
+etc. Renders only when categories exist (or grouping is forced) — conditional component.
 
 **Props**
 
@@ -87,22 +107,21 @@ interface CategoryHeadingProps {
 
 | State | Treatment |
 |---|---|
-| Default | `h3` at `--text-h3` in `--fg`; 32px margin above, 12px below — groups read as bands while cards stay on one grid |
+| Default | `h3`, 0.8rem/600 uppercase, letter-spacing 0.06em, `--muted`; 32px margin above, 12px below; first-of-type margin-top 0 (per approved max-content mock) |
 | Interactive states | None — static heading, not sticky, not collapsible |
 
-**Responsive:** identical on mobile — plain separator between stacked cards; explicitly not sticky.
+**Responsive:** mobile margin-top 28px; otherwise identical — plain separator between
+stacked cards.
 
-**Tokens:** `--fg`, `--text-h3`, `--space-3`, `--space-8`.
+**Tokens:** `--muted`.
 
 **Accessibility:** `h3` under the "Services" `h2` — preserves heading order h1 → h2 → h3.
-
----
 
 ## EmptyState
 
 **Purpose:** Zero-services placeholder: one static line in a quiet panel. No illustration,
-no CTA — a household visitor can take no action; the operator fixes the inventory at
-build time (`src/content/services.json`). Build-time-visible only.
+no CTA — a household visitor can take no action; the operator fixes inventory at build
+time. Build-time-visible only.
 
 **Props**
 
@@ -117,17 +136,15 @@ interface EmptyStateProps {
 
 | State | Treatment |
 |---|---|
-| Default | Full-width panel in `--panel`, `--radius-card`, 16px padding; single line in `--muted` prefixed by an (i) glyph (text/CSS, not an image) |
+| Default | Full-width `.empty` panel: `--panel` background, 1px dashed `--card-border`, 10px radius, 24px padding; single line in `--muted` at 0.95rem |
 | Interactive states | None |
 
 **Responsive:** full-width at every size; no layout change at the breakpoint.
 
-**Tokens:** `--panel`, `--muted`, `--radius-card`, `--space-4`.
+**Tokens:** `--panel`, `--card-border`, `--muted`.
 
 **Accessibility:** plain paragraph content — no live region, no role; the state is static,
 never announced dynamically.
-
----
 
 ## MonogramBadge
 
@@ -147,24 +164,22 @@ interface MonogramBadgeProps {
 
 | State | Treatment |
 |---|---|
-| Default | 40×40px, `--accent` background, `--accent-fg` letters at `--text-badge`, `--radius-badge`, centered flex |
+| Default | 40×40px `.badge`, `--accent` background, `--accent-fg` letters at 0.85rem/700, 8px radius, centered flex |
 | All interactive states | None — decorative, non-interactive, inherits the parent anchor's states |
 
-**Responsive:** <640px shrinks to 36×36px.
+**Responsive:** below 640px shrinks to 36×36px.
 
-**Tokens:** `--accent`, `--accent-fg`, `--radius-badge`, `--text-badge`.
+**Tokens:** `--accent`, `--accent-fg`.
 
-**Accessibility:** root is `aria-hidden="true"` always — the letters duplicate the
-adjacent service name and must not be read twice. Hierarchy carries no color semantics
-(colorblind-safe by construction).
-
----
+**Accessibility:** `aria-hidden="true"` always — the letters duplicate the adjacent
+service name and must not be read twice. Rendering clamps the label at 2 characters.
 
 ## ServiceCard
 
-**Purpose:** One service entry; the whole card is a single `<a>` — one large tap target
-per service. Composes MonogramBadge + name + always-visible arrow glyph (↗) + description
-line. The description is required content: it is the static dead-link mitigation (E3).
+**Purpose:** One service entry; the whole card is a single `<a class="card">` — one large
+tap target per service. Composes MonogramBadge + name + always-visible arrow glyph (↗) +
+description line. The description is required content: it is the E3 static dead-link
+mitigation.
 
 **Props**
 
@@ -178,30 +193,28 @@ interface ServiceCardProps {
 
 | State | Treatment |
 |---|---|
-| Default | `--card-bg` surface, 1px `--card-border`, `--radius-card`, 16px padding; badge + name (600) + `--muted` arrow; description in `--muted` at `--text-desc`. Affordance (border + arrow) always present — never hover-dependent |
+| Default | `--card-bg` surface, 1px `--card-border`, 10px radius, 16px padding; badge + name (600) + `--muted` arrow; description in `--muted` at 0.875rem. Affordance (border + arrow) always present — never hover-dependent |
 | Hover (desktop only) | Border shifts to `--card-border-hover`; no elevation change beyond border |
 | Focus (`:focus-visible`) | 2px solid `--accent` outline, 2px offset |
-| Active / pressed | `transform: translateY(1px)` — the mobile pressed feedback (no hover on touch) |
+| Active / pressed | `transform: translateY(1px)` — the mobile pressed feedback |
 | Disabled / loading / error | N/A by design — cards are plain anchors on a static page; no live status indicators |
 
-**Responsive:** desktop `align-items: flex-start`; <640px full-width, `align-items:
-center` (badge inline with name keeps cards short); min tap height ≥ 44px.
+**Responsive:** desktop `align-items: flex-start`; below 640px full-width,
+`align-items: center`, min tap height ≥ 44px (min-height 44px + padding comfortably
+exceeds it).
 
 **Tokens:** `--card-bg`, `--card-border`, `--card-border-hover`, `--accent`, `--muted`,
-`--fg`, `--radius-card`, `--space-3`, `--space-4`, `--text-name`, `--text-desc`.
+`--fg`.
 
 **Accessibility:** single anchor = single tab stop per service; accessible name is the
-visible service name (badge and arrow glyph are `aria-hidden` decorative — CF-D1 fix F1);
+visible service name plus description (badge and arrow are `aria-hidden="true"` — F1);
 same-tab navigation so Back is the return path — no `target="_blank"`; works with JS
-disabled (E5).
-
----
+disabled. Renders as an `<li>` inside the grid list (F3).
 
 ## ServiceGrid
 
 **Purpose:** Layout container for ServiceCards. Owns the responsive grid and the three
-content states of the links section: default flat grid, category-grouped grid, empty
-(delegates to EmptyState).
+content states: default flat grid, category-grouped grid, empty (delegates to EmptyState).
 
 **Props**
 
@@ -218,19 +231,18 @@ interface ServiceGridProps {
 
 | State | Treatment |
 |---|---|
-| Default (1+ services, no categories) | `display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px` — 3-up at 1100px, degrades continuously, no discrete tablet breakpoint |
-| Grouped (categories present or `groupByCategory`) | Same grid restarted per category band; CategoryHeading above each band |
+| Default (1+ services, no categories) | `ul.grid`: `display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px` — 3-up at 1100px, degrades continuously, no discrete tablet breakpoint |
+| Grouped (categories present or `groupByCategory`) | One `ul.grid` per category band, CategoryHeading above each; bands are siblings so the h3 spacing rules apply |
 | Empty (`services.length === 0`) | Renders `<EmptyState />` instead of the grid |
 
-**Responsive:** <640px collapses to one column, gap 12px (fat-finger separation). Beyond
-~30 links: not a component concern — scope is revisited, not patched.
+**Responsive:** below 640px collapses to one column, gap 12px. Beyond ~30 links: scope is
+revisited, not patched (A-1).
 
-**Tokens:** `--space-3`, `--space-4`.
+**Tokens:** none directly — spacing is literal grid CSS; children consume the color tokens.
 
-**Accessibility:** renders as `<ul class="grid">` with one `<li>` per card (per-category
-`<ul>` in the grouped state — CF-D1 fix F3); content present in served HTML (E5).
-
----
+**Accessibility:** the grid is a semantic list — `<ul class="grid">` with one `<li>` per
+card (F3): screen readers announce "list, N items". Services are sorted by display name;
+DOM order equals visual order. Content is present in served HTML (zero-JS posture).
 
 ## SiteFooter
 
@@ -250,16 +262,15 @@ interface SiteFooterProps {
 
 | State | Treatment |
 |---|---|
-| Default | 1px `--card-border` top rule; `--muted` text at `--text-footer`; 20px top / 32px bottom padding; 48px clearance above |
+| Default | 1px `--card-border` top rule; `--muted` text at 0.8rem; 20px top / 32px bottom padding; 48px clearance above from main's bottom padding |
 | Interactive states | None — contains no interactive elements |
 
-**Responsive:** <640px the line wraps naturally to two lines; no other change.
+**Responsive:** below 640px the line wraps naturally to two lines; no other change.
 
-**Tokens:** `--card-border`, `--muted`, `--text-footer`, `--space-5`, `--space-8`, `--space-12`.
+**Tokens:** `--card-border`, `--muted`.
 
-**Accessibility:** semantic `<footer>` landmark; content present in served HTML (E5).
-
----
+**Accessibility:** semantic `<footer>` landmark (contentinfo); content present in served
+HTML.
 
 ## SiteHeader
 
@@ -270,7 +281,7 @@ one-line tagline. No navigation — hub-and-spoke, nothing to navigate to.
 
 ```ts
 interface SiteHeaderProps {
-  /** Site name ("Connelly Lab" — decided, L1). */
+  /** Site name (decided at Checkpoint 1). */
   siteName: string;
   /** Muted secondary line, e.g. "Home-lab services on the LAN". Omit to render name only. */
   tagline?: string;
@@ -281,15 +292,16 @@ interface SiteHeaderProps {
 
 | State | Treatment |
 |---|---|
-| Default | h1 in `--fg` at `--text-h1`; tagline in `--muted` at `--text-body`, 4px below name |
+| Default | h1 in `--fg` at 1.75rem/700; tagline in `--muted` at 0.95rem, 4px below name |
 | Hover / focus / active | None — no interactive elements |
 
-**Responsive:** desktop 48px top padding; <640px: 32px top padding, h1 drops to 1.5rem.
+**Responsive:** desktop 48px top padding; below 640px: 32px top padding, h1 drops to
+1.5rem.
 
-**Tokens:** `--fg`, `--muted`, `--text-h1`, `--text-body`, `--space-8`, `--space-12`, `--max-width`.
+**Tokens:** `--fg`, `--muted`.
 
 **Accessibility:** exactly one `h1` per page; heading order h1 → h2 (→ h3 in the grouped
-state) with no skips.
+state) with no skips; semantic `<header>` landmark (banner).
 
 ---
 

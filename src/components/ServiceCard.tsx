@@ -5,14 +5,25 @@ export interface ServiceCardProps {
   service: Service;
 }
 
-/** One service inventory entry: monogram + name + description, whole card is the link. */
+/**
+ * One service entry; the whole card is a single anchor — one tap target per service.
+ * The arrow glyph is decorative and aria-hidden (a11y fix F1), so the accessible name
+ * is the service name followed by its description.
+ */
 export function ServiceCard({ service }: ServiceCardProps) {
   return (
-    <li className="service-card">
-      <a href={service.href}>
-        <MonogramBadge monogram={service.monogram} />
-        <span className="service-card-name">{service.name}</span>
-        <span className="service-card-description">{service.description}</span>
+    <li>
+      <a className="card" href={service.href}>
+        <MonogramBadge label={service.monogram} />
+        <span>
+          <span className="card-name">
+            {service.name}{' '}
+            <span className="arrow" aria-hidden="true">
+              {'↗'}
+            </span>
+          </span>
+          <span className="card-desc">{service.description}</span>
+        </span>
       </a>
     </li>
   );

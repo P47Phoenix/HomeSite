@@ -1,29 +1,38 @@
 [
   {
-    "name": "Service One",
-    "href": "http://service-one.home.example/",
-    "description": "Placeholder service entry — real inventory lands with S4 content.",
-    "monogram": "S1",
-    "category": "Infrastructure"
+    "name": "Home Assistant",
+    "href": "http://192.168.11.24:30103/",
+    "description": "Home automation — lights, sensors & devices",
+    "monogram": "HA"
   },
   {
-    "name": "Service Two",
-    "href": "http://service-two.home.example/",
-    "description": "Placeholder service entry — real inventory lands with S4 content.",
-    "monogram": "S2",
-    "category": "Infrastructure"
+    "name": "TrueNAS",
+    "href": "https://192.168.11.20/",
+    "description": "NAS — files & backups",
+    "monogram": "TN"
   },
   {
-    "name": "Service Three",
-    "href": "http://service-three.home.example/",
-    "description": "Placeholder service entry — real inventory lands with S4 content.",
-    "monogram": "S3",
-    "category": "Media"
+    "name": "UniFi Network",
+    "href": "https://192.168.11.30:11443/",
+    "description": "Network controller — Wi-Fi & switching",
+    "monogram": "UN"
   },
   {
-    "name": "Service Four",
-    "href": "http://service-four.home.example/",
-    "description": "Placeholder service entry — real inventory lands with S4 content.",
-    "monogram": "S4"
+    "name": "Kubernetes Dashboard",
+    "href": "http://dashboard.local/",
+    "description": "Talos cluster overview",
+    "monogram": "K8"
+  },
+  {
+    "name": "Container Registry",
+    "href": "http://registry.local/",
+    "description": "Private container images",
+    "monogram": "CR"
+  },
+  {
+    "name": "MCP Gateway",
+    "href": "http://mcp.local/",
+    "description": "MCP servers for agent tooling",
+    "monogram": "MG"
   }
 ]

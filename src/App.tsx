@@ -9,14 +9,12 @@ export interface AppProps {
 export function App({ services }: AppProps) {
   return (
     <>
-      <SiteHeader />
-      <main>
-        <section id="services" aria-labelledby="services-heading">
-          <h2 id="services-heading">Services</h2>
-          <ServiceGrid services={services} />
-        </section>
+      <SiteHeader siteName="Connelly Lab" tagline="Home-lab services on the LAN" />
+      <main className="wrap">
+        <h2>Services</h2>
+        <ServiceGrid services={services} />
       </main>
-      <SiteFooter />
+      <SiteFooter text={'Connelly Lab · LAN only · served from the Talos cluster'} />
     </>
   );
 }

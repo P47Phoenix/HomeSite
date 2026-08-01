@@ -1,9 +1,9 @@
 export interface CategoryHeadingProps {
-  /** Category display name, e.g. "Infrastructure". */
-  name: string;
+  /** Category label, e.g. "Home Automation". */
+  title: string;
 }
 
-/** Category section heading inside the service grid (h3 under the page h1 / section h2). */
-export function CategoryHeading({ name }: CategoryHeadingProps) {
-  return <h3 className="category-heading">{name}</h3>;
+/** Category band separator (h3 under the "Services" h2) — grouped state only. */
+export function CategoryHeading({ title }: CategoryHeadingProps) {
+  return <h3>{title}</h3>;
 }
