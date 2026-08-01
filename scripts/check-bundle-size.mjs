@@ -13,17 +13,19 @@ if (!Number.isFinite(budgetKB) || budgetKB <= 0) {
   process.exit(1);
 }
 
-const assetsDir = join(repoRoot, 'dist', 'assets');
-if (!existsSync(assetsDir)) {
-  console.error('bundle-size gate: dist/assets not found — run npm run build first.');
+const distDir = join(repoRoot, 'dist');
+if (!existsSync(distDir)) {
+  console.error('bundle-size gate: dist/ not found — run npm run build first.');
   process.exit(1);
 }
 
-const files = readdirSync(assetsDir);
+// Measure every JS file anywhere under dist/ — public/ passthrough files ship too.
+const files = readdirSync(distDir, { recursive: true }).map(String);
 let jsBytes = 0;
 let cssBytes = 0;
 for (const file of files) {
-  const gz = gzipSync(readFileSync(join(assetsDir, file))).length;
+  if (!file.endsWith('.js') && !file.endsWith('.css')) continue;
+  const gz = gzipSync(readFileSync(join(distDir, file))).length;
   if (file.endsWith('.js')) jsBytes += gz;
   if (file.endsWith('.css')) cssBytes += gz;
 }
