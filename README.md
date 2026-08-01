@@ -27,7 +27,15 @@ open a PR, let CI gate it. Content bakes into the prerendered HTML at build time
 
 ## Docs
 
-See `docs/README.md` for documentation conventions and the `behavior-change`
-PR label rule.
+- [`docs/README.md`](docs/README.md) — documentation conventions (what goes where), the
+  NFR-10 same-PR docs rule, and the `behavior-change` PR label convention
+- [`docs/architecture/architecture.md`](docs/architecture/architecture.md) — build + CI/CD
+  architecture and the deploy hand-off contract (Containers repo pins the image tag)
+- [`docs/architecture/adr/`](docs/architecture/adr/README.md) — Architecture Decision
+  Records (ADR-001 TLS, ADR-003 zero-JS prerender, ADR-004 hostname scheme; cross-repo
+  numbering note)
+- [`docs/components/component-guide.md`](docs/components/component-guide.md) — the
+  seven-component guide (CI-enforced coverage, M2)
+- [`docs/design/mocks/`](docs/design/mocks) — approved design mocks (CF-D4)
 
 <!-- S3 scaffold CI verification PR marker -->

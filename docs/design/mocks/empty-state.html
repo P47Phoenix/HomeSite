@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connelly Lab</title>
+<!--
+  FR-04 review mock — empty state (W3; user-flows edge case "Empty state", FR-05).
+  Zero services configured: links section renders a single static line instead of
+  an empty gap; header and footer unaffected. Build-time-visible state only —
+  FR-05 AC requires real content at UAT.
+  Self-contained: inline CSS only, no JS, no external assets.
+-->
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --fg: #1b1e24;
+    --muted: #5b6472;
+    --card-border: #d9dde3;
+    --accent: #2f6fed;
+    --panel: #eceef2;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --fg: #e8eaee;
+      --muted: #9aa3b0;
+      --card-border: #2e333c;
+      --accent: #5b8def;
+      --panel: #1a1d23;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  header { padding: 48px 0 0; }
+  .site-name { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .proposed {
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 2px 10px;
+  }
+  .tagline { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
+
+  main { padding: 32px 0 48px; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 0 0 16px; }
+
+  /* Single static line in a quiet panel — no CTA, no illustration (W3) */
+  .empty {
+    background: var(--panel);
+    border: 1px dashed var(--card-border);
+    border-radius: 10px;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  footer {
+    border-top: 1px solid var(--card-border);
+    padding: 20px 0 32px;
+    color: var(--muted); font-size: 0.8rem;
+  }
+
+  @media (max-width: 640px) {
+    header { padding-top: 32px; }
+    h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+  <header class="wrap">
+    <div class="site-name">
+      <h1>Connelly Lab</h1>
+      <span class="proposed" title="Site name is a proposal — operator decides at mock review">Proposed name</span>
+    </div>
+    <p class="tagline">Home-lab services on the LAN</p>
+  </header>
+
+  <main class="wrap">
+    <h2>Services</h2>
+    <p class="empty">No services listed yet.</p>
+  </main>
+
+  <footer>
+    <div class="wrap">Connelly Lab &middot; LAN only &middot; served from the Talos cluster</div>
+  </footer>
+</body>
+</html>
