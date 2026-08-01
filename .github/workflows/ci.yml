@@ -97,7 +97,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Secret scan (gitleaks, FR-15a)
-        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Workflow-security grep-asserts (SEC-06/SEC-07)
