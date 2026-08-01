@@ -1,0 +1,15 @@
+# Keep the build context to what `npm run build` needs.
+.git
+.github
+node_modules
+dist
+docs
+tests
+test-results
+playwright-report
+playwright.config.ts
+vitest.config.ts
+eslint.config.js
+README.md
+Dockerfile
+.dockerignore

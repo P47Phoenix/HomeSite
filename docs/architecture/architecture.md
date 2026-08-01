@@ -83,8 +83,9 @@ HomeSite/
 ├── scripts/
 │   ├── prerender.tsx          # SSG entry (renderToStaticMarkup → dist/index.html)
 │   ├── validate-content.ts    # services.json schema gate (build step)
-│   └── check-*.{mjs,sh}       # CI gates: bundle size, docs coverage, docs presence,
-│                              # workflow security
+│   ├── check-*.{mjs,sh}       # CI gates: bundle size, docs coverage, docs presence,
+│   │                          # workflow security
+│   └── image-smoke.sh         # F-5 image smoke: healthz / cache / SEC-09 / 404 / non-root
 ├── tests/
 │   ├── unit/                  # Vitest + RTL (≥ 80% line coverage, config-enforced)
 │   ├── integration/           # composed full-page assembly (not renamed unit tests)
@@ -96,7 +97,10 @@ HomeSite/
 │   ├── architecture/architecture.md     # this document (FR-07)
 │   ├── architecture/adr/                # ADRs (see adr/README.md numbering note)
 │   └── design/mocks/          # approved design mocks (CF-D4)
-├── .github/workflows/ci.yml   # test pyramid + gates (+ publish, S6)
+├── Dockerfile                 # multi-stage: native node build → nginx-unprivileged serve (S6)
+├── nginx.conf                 # in-image cache policy, /healthz, SEC-09 headers (S6)
+├── .github/workflows/ci.yml   # test pyramid + gates + image smoke + main-only publish
+├── .github/workflows/rebuild.yml  # scheduled build-health verification — NOT freshness (PA-1)
 ├── .github/dependabot.yml     # npm / docker / github-actions ecosystems
 └── package.json / tsconfig.json (strict) / vite.config.ts / vitest.config.ts
 ```
@@ -118,6 +122,10 @@ Pipeline stages (single workflow, fail-fast order — test pyramid below build/p
    set-equality rule — OQ-M3) → docs-presence check (M8a)
 5. E2E (Playwright vs `vite preview` of the built `dist/`)
 6. Secret scan (gitleaks — FR-15a) + workflow-security grep-asserts
+6b. **Image smoke** (every run, PRs included, no elevation — QA contract F-5): the amd64
+   image is built, run, and asserted (`scripts/image-smoke.sh`: `/healthz` 200, `/`
+   no-cache, hashed asset immutable, full SEC-09 header set, unknown path 404,
+   non-root uid), then the arm64 leg is cross-built without publishing.
 7. **Multi-arch image build & publish** (main branch only, S6): QEMU + buildx,
    `platforms: linux/amd64,linux/arm64`, push to `ghcr.io/p47phoenix/homesite`
    (**public** — operator decision 3, no pull secret anywhere). The build stage is declared

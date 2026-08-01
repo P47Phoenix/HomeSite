@@ -1,0 +1,36 @@
+# rebuild.yml — scheduled BUILD-HEALTH verification, NOT a freshness mechanism (PA-1).
+#
+# FR-16 as amended (PRD assumption log, PA-1): CVE freshness arrives via reviewed
+# Dependabot base-image digest-bump PRs (`docker` ecosystem in .github/dependabot.yml),
+# merged at least monthly whenever one is open, followed by the normal Containers
+# bump PR — never via this workflow. The Dockerfile pins both base images by digest
+# (SEC-05), so this rebuild reassembles byte-equivalent inputs: a green run proves
+# only that the multi-arch pipeline still builds from cold cache. It lands zero CVE
+# fixes by construction and deliberately publishes nothing (no GHCR push, no
+# elevation — the sha-* never-reuse rule and the single-elevation-point rule,
+# security AC #9, both stay intact).
+name: Rebuild (build-health verification)
+
+on:
+  schedule:
+    - cron: '17 6 3 * *' # monthly: 3rd day, 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+      - uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
+      - uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+      - name: Cold-cache multi-arch build (no push, no elevation)
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: false
+          no-cache: true
+          provenance: false

@@ -1,5 +1,7 @@
-# FR-16: dependency freshness via reviewed PRs — every bump runs the full CI pyramid.
-# No auto-merge (SEC-05/SEC-08). The docker ecosystem is added with the Dockerfile at S6.
+# FR-16 (as amended, PA-1): dependency + base-image freshness via reviewed PRs —
+# every bump runs the full CI pyramid and is operator-merged, never merged
+# automatically (SEC-05/SEC-08). Base-image digest-bump PRs (docker ecosystem)
+# are reviewed and merged at least monthly whenever one is open.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -7,6 +9,10 @@ updates:
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
     directory: /
     schedule:
       interval: weekly
