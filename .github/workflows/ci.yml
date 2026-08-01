@@ -1,0 +1,104 @@
+# CI test pyramid + gates (architecture §2, fail-fast order):
+# typecheck/lint -> unit -> integration -> build+gates -> e2e -> secret scan.
+# Multi-arch image build/publish is added by S6 as a main-only job after this chain.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# SEC-06: least-privilege GITHUB_TOKEN. Only the future S6 publish job may elevate
+# (to packages: write, job-scoped). The privileged PR-target trigger is banned repo-wide
+# (enforced by scripts/check-workflow-security.sh).
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint
+
+  unit:
+    needs: typecheck-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Coverage threshold lives in vitest.config.ts (M4) — never in this YAML.
+      - run: npm run test:unit
+
+  integration:
+    needs: unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:integration
+
+  build-gates:
+    needs: integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Bundle-size gate (M10, fail > 250 KB gzipped JS)
+        run: npm run check:bundle
+      - name: Docs-coverage gate (M2, OQ-M3 name-based rule)
+        run: npm run check:docs-coverage
+      - name: Docs-presence check (M8a)
+        run: npm run check:docs-presence
+
+  e2e:
+    needs: build-gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      # Playwright runs against `vite preview` of the built dist/ (CF-D3) — never the dev server.
+      - run: npm run test:e2e
+
+  secret-scan:
+    needs: e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.1
+        with:
+          fetch-depth: 0
+      - name: Secret scan (gitleaks, FR-15a)
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Workflow-security grep-asserts (SEC-06/SEC-07)
+        run: bash scripts/check-workflow-security.sh

@@ -1,0 +1,93 @@
+/* Scaffold-level tokens + base layout. S4 replaces these with the approved-mock
+ * tokens verbatim (design tokens contract, architecture section 1). */
+:root {
+  --bg: #101418;
+  --text: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #8ab4f8;
+  --card-bg: #1b2026;
+  --card-border: #2c333b;
+  --card-border-hover: #4a545f;
+  --radius-card: 10px;
+  --text-desc: 0.9rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.site-header,
+main,
+.site-footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.site-header nav a {
+  color: var(--accent);
+}
+
+.service-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.service-card a {
+  display: block;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.service-card a:hover {
+  border-color: var(--card-border-hover);
+}
+
+.service-card a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.service-card-name {
+  display: block;
+  font-weight: 600;
+}
+
+.service-card-description {
+  display: block;
+  color: var(--muted);
+  font-size: var(--text-desc);
+}
+
+.monogram-badge {
+  display: inline-block;
+  min-width: 2rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.empty-state {
+  color: var(--muted);
+}
+
+.site-footer {
+  color: var(--muted);
+  font-size: 0.85rem;
+}

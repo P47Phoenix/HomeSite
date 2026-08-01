@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Service One",
+    "href": "http://service-one.home.example/",
+    "description": "Placeholder service entry — real inventory lands with S4 content.",
+    "monogram": "S1",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Service Two",
+    "href": "http://service-two.home.example/",
+    "description": "Placeholder service entry — real inventory lands with S4 content.",
+    "monogram": "S2",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Service Three",
+    "href": "http://service-three.home.example/",
+    "description": "Placeholder service entry — real inventory lands with S4 content.",
+    "monogram": "S3",
+    "category": "Media"
+  },
+  {
+    "name": "Service Four",
+    "href": "http://service-four.home.example/",
+    "description": "Placeholder service entry — real inventory lands with S4 content.",
+    "monogram": "S4"
+  }
+]

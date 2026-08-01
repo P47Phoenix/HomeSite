@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Files",
+    "href": "http://files.fixture.example/",
+    "description": "Network file storage.",
+    "monogram": "FI",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Router",
+    "href": "http://router.fixture.example/",
+    "description": "Network gateway admin.",
+    "monogram": "RT",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Movies",
+    "href": "http://movies.fixture.example/",
+    "description": "Media streaming server.",
+    "monogram": "MV",
+    "category": "Media"
+  },
+  {
+    "name": "Music",
+    "href": "http://music.fixture.example/",
+    "description": "Audio streaming server.",
+    "monogram": "MU",
+    "category": "Media"
+  }
+]

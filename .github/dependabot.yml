@@ -1,0 +1,12 @@
+# FR-16: dependency freshness via reviewed PRs — every bump runs the full CI pyramid.
+# No auto-merge (SEC-05/SEC-08). The docker ecosystem is added with the Dockerfile at S6.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

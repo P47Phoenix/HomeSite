@@ -1,0 +1,132 @@
+[
+  {
+    "name": "Service 01",
+    "href": "http://svc-01.fixture.example/",
+    "description": "Max-content fixture entry number 1.",
+    "monogram": "S1",
+    "category": "Media"
+  },
+  {
+    "name": "Service 02",
+    "href": "http://svc-02.fixture.example/",
+    "description": "Max-content fixture entry number 2.",
+    "monogram": "S2",
+    "category": "Monitoring"
+  },
+  {
+    "name": "Service 03",
+    "href": "http://svc-03.fixture.example/",
+    "description": "Max-content fixture entry number 3.",
+    "monogram": "S3",
+    "category": "Automation"
+  },
+  {
+    "name": "Service 04",
+    "href": "http://svc-04.fixture.example/",
+    "description": "Max-content fixture entry number 4.",
+    "monogram": "S4",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Service 05",
+    "href": "http://svc-05.fixture.example/",
+    "description": "Max-content fixture entry number 5.",
+    "monogram": "S5"
+  },
+  {
+    "name": "Service 06",
+    "href": "http://svc-06.fixture.example/",
+    "description": "Max-content fixture entry number 6.",
+    "monogram": "S6",
+    "category": "Monitoring"
+  },
+  {
+    "name": "Service 07",
+    "href": "http://svc-07.fixture.example/",
+    "description": "Max-content fixture entry number 7.",
+    "monogram": "S7",
+    "category": "Automation"
+  },
+  {
+    "name": "Service 08",
+    "href": "http://svc-08.fixture.example/",
+    "description": "Max-content fixture entry number 8.",
+    "monogram": "S8",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Service 09",
+    "href": "http://svc-09.fixture.example/",
+    "description": "Max-content fixture entry number 9.",
+    "monogram": "S9",
+    "category": "Media"
+  },
+  {
+    "name": "Service 10",
+    "href": "http://svc-10.fixture.example/",
+    "description": "Max-content fixture entry number 10.",
+    "monogram": "S0"
+  },
+  {
+    "name": "Service 11",
+    "href": "http://svc-11.fixture.example/",
+    "description": "Max-content fixture entry number 11.",
+    "monogram": "S1",
+    "category": "Automation"
+  },
+  {
+    "name": "Service 12",
+    "href": "http://svc-12.fixture.example/",
+    "description": "Max-content fixture entry number 12.",
+    "monogram": "S2",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Service 13",
+    "href": "http://svc-13.fixture.example/",
+    "description": "Max-content fixture entry number 13.",
+    "monogram": "S3",
+    "category": "Media"
+  },
+  {
+    "name": "Service 14",
+    "href": "http://svc-14.fixture.example/",
+    "description": "Max-content fixture entry number 14.",
+    "monogram": "S4",
+    "category": "Monitoring"
+  },
+  {
+    "name": "Service 15",
+    "href": "http://svc-15.fixture.example/",
+    "description": "Max-content fixture entry number 15.",
+    "monogram": "S5"
+  },
+  {
+    "name": "Service 16",
+    "href": "http://svc-16.fixture.example/",
+    "description": "Max-content fixture entry number 16.",
+    "monogram": "S6",
+    "category": "Infrastructure"
+  },
+  {
+    "name": "Service 17",
+    "href": "http://svc-17.fixture.example/",
+    "description": "Max-content fixture entry number 17.",
+    "monogram": "S7",
+    "category": "Media"
+  },
+  {
+    "name": "Service 18",
+    "href": "http://svc-18.fixture.example/",
+    "description": "Max-content fixture entry number 18.",
+    "monogram": "S8",
+    "category": "Monitoring"
+  },
+  {
+    "name": "Service 19",
+    "href": "http://svc-19.fixture.example/",
+    "description": "Max-content fixture entry number 19.",
+    "monogram": "S9",
+    "category": "Automation"
+  }
+]

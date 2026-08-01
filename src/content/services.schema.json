@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HomeSite service inventory",
+  "description": "Contract for src/content/services.json — mirrors the Service type pinned in the approved component specs. Build fails on violation (architecture section 1).",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["name", "href", "description", "monogram"],
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Display name, e.g. \"TrueNAS\"."
+      },
+      "href": {
+        "type": "string",
+        "pattern": "^https?://",
+        "description": "Absolute URL of the service on the LAN."
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1,
+        "description": "One-line plain-text description (E3 dead-link mitigation — required)."
+      },
+      "monogram": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2,
+        "description": "1-2 characters for the monogram badge."
+      },
+      "category": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Optional grouping key."
+      }
+    }
+  }
+}
