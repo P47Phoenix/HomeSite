@@ -25,7 +25,7 @@ function svc(name: string, category?: string): Service {
 
 describe('compareCategories', () => {
   it('is zero for equal values and antisymmetric for distinct values', () => {
-    expect(compareCategories('Media', 'Media')).toBe(0);
+    expect(compareCategories('Media', 'Media') === 0).toBe(true);
     const ab = compareCategories('Infrastructure', 'Media');
     const ba = compareCategories('Media', 'Infrastructure');
     expect(ab).not.toBe(0);
@@ -33,7 +33,7 @@ describe('compareCategories', () => {
   });
 
   it('is case-insensitive', () => {
-    expect(compareCategories('media', 'MEDIA')).toBe(0);
+    expect(compareCategories('media', 'MEDIA') === 0).toBe(true);
   });
 });
 
@@ -41,7 +41,7 @@ describe('compareServices', () => {
   it('compares by display name with identity and antisymmetry', () => {
     const a = svc('Files');
     const b = svc('Router');
-    expect(compareServices(a, a)).toBe(0);
+    expect(compareServices(a, a) === 0).toBe(true);
     expect(Math.sign(compareServices(a, b))).toBe(-Math.sign(compareServices(b, a)));
   });
 });
