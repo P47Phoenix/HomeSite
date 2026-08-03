@@ -7,7 +7,7 @@
   },
   {
     "name": "TrueNAS",
-    "href": "https://192.168.11.20/",
+    "href": "https://192.168.11.20:8443/",
     "description": "NAS — files & backups",
     "monogram": "TN"
   },
@@ -19,20 +19,20 @@
   },
   {
     "name": "Kubernetes Dashboard",
-    "href": "http://dashboard.local/",
+    "href": "https://10.100.0.201/",
     "description": "Talos cluster overview",
     "monogram": "K8"
   },
   {
     "name": "Container Registry",
-    "href": "http://registry.local/",
+    "href": "http://10.100.0.220:5000/",
     "description": "Private container images",
     "monogram": "CR"
   },
   {
     "name": "MCP Gateway",
-    "href": "http://mcp.local/",
-    "description": "MCP servers for agent tooling",
+    "href": "http://10.100.0.200/status",
+    "description": "MCP server status — agent tooling",
     "monogram": "MG"
   }
 ]
