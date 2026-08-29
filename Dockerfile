@@ -20,7 +20,7 @@ RUN npm run build
 # Runtime stage: nginx-unprivileged (non-root uid 101, listens 8080, pid + cache
 # under /tmp — compatible with readOnlyRootFilesystem + emptyDir /tmp, SEC-08).
 # COPY-only: no RUN, no USER, no package installs in this stage (TC-S6-01).
-FROM docker.io/nginxinc/nginx-unprivileged:stable-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49
+FROM docker.io/nginxinc/nginx-unprivileged:stable-alpine@sha256:93722936b82ec8a1178d48448e619226680d2de3706a1640800e186cd5fa7fd3
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 8080
